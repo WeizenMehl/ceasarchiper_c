@@ -9,7 +9,7 @@ int find_index(char value,const char str[]);
 void getUserInput(char *Input);
 
 int main() {
-    char *input = malloc(1); // just enough so I can test with input 'test'
+    char *input = malloc(2); // just enough so I can test with input 'test'
     if(input == NULL){
         printf("Allocating input varable failed");
         return 1;
