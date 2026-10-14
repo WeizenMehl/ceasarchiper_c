@@ -4,12 +4,12 @@
 
 char eng_alphabet[] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
 
-const char * encrypt(char str[],int shift_value);
+char * encrypt(char str[],int shift_value);
 int find_index(char value,const char str[]);
-void getUserInput(char *Input);
+void getUserInput(char *input);
 
 int main() {
-    char *input = malloc(2); // just enough so I can test with input 'test'
+    char *input = malloc(2);
     if(input == NULL){
         printf("Allocating input varable failed");
         return 1;
@@ -30,8 +30,8 @@ int main() {
     return 0;
 }
 
-const char *encrypt(char str[], int shift_value){
-    for(int i = 0;str[i] != '\0';i++){
+char *encrypt(char str[], int shift_value){
+    for(int i = 0;i <= sizeof(eng_alphabet);i++){
         int index = find_index(str[i],eng_alphabet);
         if(index!= -1){
             str[i] = eng_alphabet[(index+shift_value) % sizeof(eng_alphabet)];
@@ -46,7 +46,7 @@ int find_index(char value,const char str[]){
             return i;
         }
     }
-    return -1; // bad for an universal find_index function but for this case where an alphabet has maximal around 26 chars its fine
+    return -1;
 }
 
 void getUserInput(char *input){
@@ -61,8 +61,9 @@ void getUserInput(char *input){
             char* temp = realloc(input,new_capacity);
 
             if(temp ==NULL){
-                free(input);
                 perror("Cant allocate more memory for User Input");
+                free(input);
+                return;
             }
 
             input = temp;
