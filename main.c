@@ -1,12 +1,12 @@
 #include <stdio.h>
+#include <errno.h>
 #include <stdlib.h>
-#include <stdbool.h>
 
 char eng_alphabet[] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
 
 const char * encrypt(char str[],int shift_value);
-int find_index(char value,char str[]);
-bool getUserInput(char *Input);
+int find_index(char value,const char str[]);
+void getUserInput(char *Input);
 
 int main() {
     char *input = malloc(1); // just enough so I can test with input 'test'
@@ -19,9 +19,7 @@ int main() {
     printf("--||Simple Ceasar Chiper written in C||--");
 
     printf("\nPlease Input Text:");
-    if(!getUserInput(input)){
-        return 1;
-    }
+    getUserInput(input);
 
     printf("Please input shift value:");
     scanf("%d", &shift_value);
@@ -34,24 +32,25 @@ int main() {
 
 const char *encrypt(char str[], int shift_value){
     for(int i = 0;str[i] != '\0';i++){
-        if(find_index(str[i],eng_alphabet) != 404){
-            str[i] = eng_alphabet[find_index(str[i],eng_alphabet)+shift_value];
+        int index = find_index(str[i],eng_alphabet);
+        if(index!= -1){
+            str[i] = eng_alphabet[(index+shift_value) % sizeof(eng_alphabet)];
         }
     }
     return str;
 }
 
-int find_index(char value,char str[]){
+int find_index(char value,const char str[]){
     for(int i = 0;str[i] != '\0';i++){
         if(value == str[i]){
             return i;
         }
     }
-    return 404; // bad for an universal find_index function but for this case where an alphabet has maximal around 26 chars its fine
+    return -1; // bad for an universal find_index function but for this case where an alphabet has maximal around 26 chars its fine
 }
 
-bool getUserInput(char *input){
-    int capacity = 1;
+void getUserInput(char *input){
+    int capacity = 2;
     int length = 0;
 
     int ch;
@@ -62,9 +61,8 @@ bool getUserInput(char *input){
             char* temp = realloc(input,new_capacity);
 
             if(temp ==NULL){
-                printf("Cant allocate more memory for larger String");
                 free(input);
-                return false;
+                perror("Cant allocate more memory for User Input");
             }
 
             input = temp;
@@ -73,5 +71,4 @@ bool getUserInput(char *input){
         input[length++] = (char)ch;
     }
     input[length] = '\0';
-    return true;
 }
