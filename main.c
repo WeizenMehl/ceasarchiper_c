@@ -1,10 +1,10 @@
 #include <stdio.h>
-#include <errno.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
 char eng_alphabet[] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '\0'};
 
-char * encrypt(char str[],int shift_value);
+char * crypting(char str[],int shift_value, bool choice);
 int find_index(char value,const char str[]);
 int getUserInput(char **input);
 
@@ -14,7 +14,8 @@ int main() {
         printf("Allocating input varable failed");
         return 1;
     }
-    int shift_value;
+    int shift_value, temp;
+    bool choice;
 
     printf("--||Simple Ceasar Chiper written in C||--");
 
@@ -24,20 +25,27 @@ int main() {
         return 1;
     }
 
+    printf("\nDo you want to encrypt[0] or decrypt[1]:");
+    scanf("%d", &temp);
+    choice = temp;
+
     printf("Please input shift value:");
     scanf("%d", &shift_value);
 
-    printf("%s", encrypt(input, shift_value));
+    printf("%s", crypting(input, shift_value, choice));
 
     free(input);
     return 0;
 }
 
-char *encrypt(char str[], int shift_value){
+char *crypting(char str[], int shift_value, bool choice){
     for(int i = 0;i <= sizeof(eng_alphabet)-1;i++){
         int index = find_index(str[i],eng_alphabet);
-        if(index!= -1){
+        if(index != -1 && !choice){
             str[i] = eng_alphabet[(index+shift_value) % sizeof(eng_alphabet)];
+        }
+        else if(index != -1 && choice){
+            str[i] = eng_alphabet[(index-shift_value) % sizeof(eng_alphabet)];
         }
     }
     return str;
