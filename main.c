@@ -73,6 +73,6 @@ int getUserInput(char **input){
         }
         (*input)[length++] = (char)ch;
     }
-    *input[length] = '\0';
+    (*input)[length] = '\0';
     return 1;
 }
